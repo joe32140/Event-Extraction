@@ -1,7 +1,7 @@
 # Event-Extraction
 Under development!
 
-Implementation of "Event2Mind: Commonsense Inference on Events, Intents, and Reactions"
+Implementation of event extraction in ["Event2Mind: Commonsense Inference on Events, Intents, and Reactions"](https://arxiv.org/pdf/1706.01331.pdf)
 ```
 Following Pichotta and Mooney (2016a), we developed a
 4-tuple event representation (s, v, o, m) where v is a verb, s
