@@ -12,4 +12,4 @@ that he drove,” “drove” is the causal complement to “glad.”),
 or any other dependency unclassifiable to Stanford’s dependency
 parser.
 ```
-To generalize the content, the author use Wordnet and Verbnet to replace the original word with higher level one. 
+To generalize the content, the author uses Wordnet and Verbnet to replace the original word with higher level one. 
