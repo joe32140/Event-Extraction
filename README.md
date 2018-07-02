@@ -16,6 +16,7 @@ To generalize the content, the author uses Wordnet and Verbnet to replace the or
 
 Requirements
 =========
+- python3.6
 - nltk: wordnet, verbnet
 - stanford core nlp jar files
 
