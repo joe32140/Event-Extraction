@@ -13,3 +13,13 @@ or any other dependency unclassifiable to Stanford’s dependency
 parser.
 ```
 To generalize the content, the author uses Wordnet and Verbnet to replace the original word with higher level one. 
+
+Requirements
+=========
+- nltk: wordnet, verbnet
+- stanford core nlp jar files
+
+To Do List
+=========
+- [x] Replcing Named Entities
+- [x] Genra Clustering
