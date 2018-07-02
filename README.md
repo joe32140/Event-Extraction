@@ -1,5 +1,4 @@
 # Event-Extraction
-Under development!
 
 Implementation of event extraction in ["Event2Mind: Commonsense Inference on Events, Intents, and Reactions"](https://arxiv.org/pdf/1706.01331.pdf)
 ```
@@ -22,5 +21,5 @@ Requirements
 
 To Do List
 =========
-- [x] Replcing Named Entities
-- [x] Genra Clustering
+- [ ] Replcing Named Entities
+- [ ] Genra Clustering
