@@ -160,19 +160,42 @@ class NERparser():
                                '/home/joe32140/stanford/stanford-ner-2018-02-27/stanford-ner.jar',
                                                    encoding='utf-8')
 
-    def getNER_sents(sents):
+    def getNER_sents(self, sents):
         tokenized_sents = [word_tokenize(sent) for sent in sents]
-        classified_sents = st.tag_sents(tokenized_sents)
+        classified_sents = self.st.tag_sents(tokenized_sents)
         return classified_sents
 
-    def replace_person(sents):
-        classified_sents =getNER_sents(sents)
+    def count_entity(self, entity, table):
 
+        if entity[0] not in table[entity[1]]:
+            table[entity[1]][entity[0]]=str(len(table[entity[1]].keys()))
+        return table[entity[1]][entity[0]]
+
+
+    def replace(self, sents):
+        classified_sents =self.getNER_sents(sents)
+        new_sentences=[]
+        for i, sent in enumerate(classified_sents):
+            if i%5==0:
+                check_repeat={'PERSON':{}, 'LOCATION':{}, 'ORGANIZATION':{}}
+            tmp=[]
+            for w in sent:
+                if w[1]!='O':
+                    count = self.count_entity(w, check_repeat)
+                    tmp.append(w[1]+'_'+str(count))
+                else:
+                    tmp.append(w[0])
+            new_sentences.append(' '.join(tmp))
+        return new_sentences
 
 if __name__ == '__main__':
     parser = DependencyParser()
     G = Generalization()
-    sents = ['lots of folks come out and set up tables to sell their crafts .']
+    ner_parser = NERparser()
+    #sents = ['lots of folks come out and set up tables to sell their crafts .']
+    sents = ['Ben is a genius boy coming from Taiwan and his brother Joe works in Microsoft and Facebook.']
+    print(ner_parser.replace(sents))
+    """
     a, parsed_sents=parser.get_SVOM(sents)
     for i in range(len(a)):
         print("========================")
@@ -180,3 +203,4 @@ if __name__ == '__main__':
         print(parsed_sents[i])
         print(a[i])
         print(G.run(a)[i])
+    """

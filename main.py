@@ -1,9 +1,9 @@
-from generalization import DependencyParser, Generalization
+from generalization import DependencyParser, Generalization, NERparser
 import json
 import re
 from random import randrange
 
-if __name__ == '__main__':
+def Dependency_Parsing():
     parser = DependencyParser()
     G = Generalization()
     files = ['train', 'val', 'test']
@@ -38,3 +38,33 @@ if __name__ == '__main__':
             for j in range(start, end):
                 data['annotations'][j][0]['event']=g_sents[j%batch_size]
         json.dump(data, open(f'/home/cloud60138/Event-Extraction/data/event_clean_{file_path}.json', 'w'), indent=4)
+
+def NER():
+    ner_parser = NERparser()
+    data = json.load(open(f'/home/joe32140/event-visual-storytelling/data/ROC.json'))
+    batch_size=100
+
+    n_batch = len(data)//batch_size
+    #n_batch=40
+    for i in range(n_batch+1):
+        print(f"Batch {i}===============================")
+
+        start = i*batch_size
+        end = (i+1)*batch_size if (i+1)*batch_size<len(data) else len(data)
+        tmp=[]
+        for j in range(start,end):
+            tmp.extend([ clear_string(sent) for sent in data[j]['storys'] ])
+        parsed_sents = ner_parser.replace(tmp)
+        if i == 50:exit()
+        for k, j in enumerate(range(start, end)):
+            data[j]['story_ner']=parsed_sents[k*5:(k+1)*5]
+    json.dump(data, open(f'/home/joe32140/event-visual-storytelling/data/ROC_ner.json', 'w'), indent=4)
+
+def clear_string(x):
+    x = re.sub("\[|\]","", x)
+    x = re.sub("'s"," is", x)
+    return x
+
+if __name__ == '__main__':
+    NER()
+    #Dependency_Parsing()
