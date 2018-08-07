@@ -11,6 +11,7 @@ if __name__ == '__main__':
         print(f"===={file_path}====")
         data = json.load(open(f'/home/bendan0617/Visual-Storytelling/data/sis/partial_parsed_clean_{file_path}.json'))
         batch_size=500
+
         n_batch = len(data['annotations'])//batch_size
         #n_batch=40
         for i in range(n_batch+1):
@@ -23,6 +24,10 @@ if __name__ == '__main__':
             for j in range(start,end):
                 tmp.append(re.sub("\[|\]","",data['annotations'][j][0]['text']))
             print("tmp:", tmp[random_index])
+            for sentence in tmp:
+                for i, word in enumerate(sentence):
+                    if word == "'s":
+                        sentence[i] = "is"
             parsed_sents, aa = parser.get_SVOM(tmp)
             g_sents = G.run(parsed_sents)
             print("parsed_sents:",parsed_sents[random_index])

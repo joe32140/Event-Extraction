@@ -118,7 +118,7 @@ class DependencyParser():
             for triple in sent[0]:
                 t1, t2, t3 = triple[0], triple[1], triple[2]
                 if t2[0:5]=='nsubj' and t1[1][0]=='V':
-                    if tmp['V'][0]=='<empty>': tmp['V']=t1
+                    if tmp['V'][0]=='<empty>' and t1[1][0] =='V': tmp['V']=t1
                     if tmp['S'][0]=='<empty>': tmp['S']=t3
                 elif t2=='nsubj' and t1[1][0] in 'VJNP':
                     if tmp['O'][0]=='<empty>': tmp['O']=t1
@@ -130,15 +130,24 @@ class DependencyParser():
                     if tmp['V'][0]=='<empty>': tmp['V']=t1
                     if tmp['O'][0]=='<empty>': tmp['O']=t3
                 elif t2=='ccomp' or t2=='iobj' or t2=='pobj' or t2=='xcomp':
-                    if tmp['M'][0]=='<empty>': tmp['M']=t3
+                    #if tmp['S'][0]=='<empty>':
+                       # tmp['S']=t3
+                    if tmp['M'][0]=='<empty>':
+                        tmp['M']=t3
                 elif t2 == 'auxpass':
                     if tmp['V'][0]=='<empty>': tmp['V']=t1
-                elif t2[0:3] == 'acl':
-                    if tmp['S'][0]=='<empty>': tmp['S']=t1
+                    if tmp['S'][0]!='<empty>':
+                        tmp['O']=tmp['S']
+                        tmp['S']=('<empty>','<empty>')
+                #elif t2[0:3] == 'acl':
+                #    if tmp['S'][0]=='<empty>': tmp['S']=t1
                 elif t2[0:4] == 'nmod':
-                    if tmp['V'][0]=='<empty>' and t1[1][0] =='V': tmp['V']=t1
+                   # if tmp['V'][0]=='<empty>' and t1[1][0] =='V': tmp['V']=t1
                     if tmp['O'][0]=='<empty>': tmp['O']=t3
-                    continue
+                elif t2 == 'dep':
+                    if tmp['S'][0]=='<empty>' and t1[1][0] != 'V' : tmp['M']=t1
+                #elif t2 == 'xcomp':
+                 #   if tmp['S'][0]=='<empty>' and t1[1][0] != 'V' : tmp['S']=t1
                 else:
                     continue
             output.append([tmp['S'], tmp['V'], tmp['O'], tmp['M']])
