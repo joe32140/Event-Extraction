@@ -3,6 +3,7 @@ from nltk.tag import StanfordNERTagger
 from nltk.tokenize import word_tokenize
 from nltk.corpus import verbnet as vn
 from nltk.parse.stanford import StanfordDependencyParser
+from nltk.tag import StanfordPOSTagger
 
 class Generalization():
     def __init__(self, hypernym_level=2):
@@ -27,7 +28,11 @@ class Generalization():
 
 
     def get_hypernym(self, word, modifier=False):
+
         word, word_type = word[0], word[1]
+        if '_' in word:
+            word = word.split('_')[0].lower()
+
         if word_type=='PRP' or word_type=='PRP$' or word_type=='<empty>' or word=='i' or word == 'one':
             return word
         syn_words = wn.synsets(word)
@@ -52,7 +57,7 @@ class Generalization():
         for l in range(self.hypernym_level):
             hypernym = word.hypernyms()
             # check if word has hypernym and the hypernym is not too general e.g. entity
-            if len(hypernym) != 0 and hypernym[0].name().split('.')[0] != "entity":
+            if len(hypernym) != 0 and "entity" not in hypernym[0].name().split('.')[0].split("_"):
                 word = hypernym[0]
             else:
                 print(hypernym)
@@ -188,13 +193,37 @@ class NERparser():
             new_sentences.append(' '.join(tmp))
         return new_sentences
 
+class POSTagger():
+    def __init__(self):
+        jar = '/home/joe32140/stanford/stanford-postagger-2018-02-27/stanford-postagger.jar'
+        model = '/home/joe32140/stanford/stanford-postagger-2018-02-27/models/english-bidirectional-distsim.tagger'
+        self.tagger = StanfordPOSTagger(model, jar, encoding='utf8')
+
+    def getPOS_sents(self, sents):
+        tokenized_sents = [word_tokenize(sent) for sent in sents]
+        classified_sents = self.tagger.tag_sents(tokenized_sents)
+        return classified_sents
+
+    def get_Noun(self, sents):
+        classified_sents =self.getPOS_sents(sents)
+        new_sentences=[]
+        for i, sent in enumerate(classified_sents):
+            tmp=[]
+            for w in sent:
+                if w[1][0] == 'N':
+                    tmp.append(w[0])
+            new_sentences.append(' '.join(tmp))
+        return new_sentences
+
 if __name__ == '__main__':
-    parser = DependencyParser()
-    G = Generalization()
-    ner_parser = NERparser()
+    #parser = DependencyParser()
+    #G = Generalization()
+    #ner_parser = NERparser()
+    pos_tagger = POSTagger()
     #sents = ['lots of folks come out and set up tables to sell their crafts .']
-    sents = ['Ben is a genius boy coming from Taiwan and his brother Joe works in Microsoft and Facebook.']
-    print(ner_parser.replace(sents))
+    sents = ['Ben is a genius boy coming from Taiwan and Mark\'s brother Joe works in Microsoft and Facebook.',
+            'Joe\'s young .']
+    print(pos_tagger.get_Noun(sents))
     """
     a, parsed_sents=parser.get_SVOM(sents)
     for i in range(len(a)):
